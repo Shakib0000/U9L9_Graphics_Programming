@@ -6,6 +6,7 @@ public class Deck {
     public Deck() {
         String[] suits = {"clubs", "diamonds", "hearts", "spades"};
         String[] values = {"02", "03", "04", "05", "06", "07", "08", "09", "10", "A", "J", "K", "Q"};
+
         deck = new ArrayList<Card>();
         for (String s : suits) {
             for (String v : values) {
