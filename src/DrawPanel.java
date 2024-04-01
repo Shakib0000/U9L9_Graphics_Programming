@@ -42,6 +42,8 @@ class DrawPanel extends JPanel implements MouseListener {
         g.setFont(new Font("Courier New", Font.BOLD, 20));
         g.drawString("GET NEW CARDS", 150, 320);
         g.drawRect((int)button.getX(), (int)button.getY(), (int)button.getWidth(), (int)button.getHeight());
+        g.drawString("Cards left: " + hand.size(), 5, 450);
+        checkGameStatus(g);
     }
 
     public void checkValues() {
@@ -126,9 +128,10 @@ class DrawPanel extends JPanel implements MouseListener {
         }
     }
 
-    public void checkGameStatus() {
+    public void checkGameStatus(Graphics g) {
         if (hand.size() == 0) {
             System.out.println("You win!");
+            g.drawString("Congrats, you win!", 5, 400);
         }
         boolean possibleEleven = false;
         boolean hasJack = false;
@@ -184,6 +187,7 @@ class DrawPanel extends JPanel implements MouseListener {
         }
         if (!possibleEleven && (!hasJack || !hasKing || !hasQueen)) {
             System.out.println("You lose!");
+            g.drawString("No available moves! GAME OVER!", 5, 400);
         }
     }
 
@@ -196,7 +200,6 @@ class DrawPanel extends JPanel implements MouseListener {
                 hand = Card.buildHand();
                 highlightedHand = new ArrayList<Card>();
                 checkValues();
-                checkGameStatus();
             }
 
             for (int i = 0; i < hand.size(); i++) {
@@ -217,7 +220,6 @@ class DrawPanel extends JPanel implements MouseListener {
                 }
                 checkValues();
             }
-            checkGameStatus();
         }
 
         if (e.getButton() == 3) {
@@ -239,7 +241,6 @@ class DrawPanel extends JPanel implements MouseListener {
                 }
                 checkValues();
             }
-            checkGameStatus();
         }
 
 
