@@ -63,7 +63,6 @@ class DrawPanel extends JPanel implements MouseListener {
             }
         }
         if (value == 11 && highlightedHand.size() == 2) {
-            System.out.println("RAHH");
             String valueFirst = "";
             for (int i = 0; i < hand.size(); i++) {
                 if ((hand.get(i).getValue().equals(highlightedHand.get(0).getValue()) && hand.get(i).getSuit().equals(highlightedHand.get(0).getSuit())) || (hand.get(i).getValue().equals(highlightedHand.get(1).getValue()) && hand.get(i).getSuit().equals(highlightedHand.get(1).getSuit()))) {
@@ -127,6 +126,67 @@ class DrawPanel extends JPanel implements MouseListener {
         }
     }
 
+    public void checkGameStatus() {
+        if (hand.size() == 0) {
+            System.out.println("You win!");
+        }
+        boolean possibleEleven = false;
+        boolean hasJack = false;
+        boolean hasKing = false;
+        boolean hasQueen = false;
+        for (int i = 0; i < hand.size(); i++) {
+            int val = 0;
+            if (!hand.get(i).getValue().equals("A") && !hand.get(i).getValue().equals("J") && !hand.get(i).getValue().equals("K") && !hand.get(i).getValue().equals("Q")) {
+                if (hand.get(i).getValue().substring(0,1).equals("0")) {
+                    val += Integer.parseInt(hand.get(i).getValue().substring(1));
+                }
+                else {
+                    val += Integer.parseInt(hand.get(i).getValue());
+                }
+            }
+            else if (hand.get(i).getValue().equals("A")) {
+                val += 1;
+            }
+            else if (hand.get(i).getValue().equals("J"))  {
+                val += 10;
+                hasJack = true;
+            }
+            else if (hand.get(i).getValue().equals("K"))  {
+                val += 10;
+                hasKing = true;
+            }
+            else if (hand.get(i).getValue().equals("Q"))  {
+                val += 10;
+                hasQueen = true;
+            }
+            for (int j = 0; j < hand.size(); j++) {
+                if (i != j) {
+                    int secondVal = 0;
+                    if (!hand.get(j).getValue().equals("A") && !hand.get(j).getValue().equals("J") && !hand.get(j).getValue().equals("K") && !hand.get(j).getValue().equals("Q")) {
+                        if (hand.get(j).getValue().substring(0,1).equals("0")) {
+                            secondVal += Integer.parseInt(hand.get(j).getValue().substring(1));
+                        }
+                        else {
+                            secondVal += Integer.parseInt(hand.get(j).getValue());
+                        }
+                    }
+                    else if (hand.get(j).getValue().equals("A")) {
+                        secondVal += 1;
+                    }
+                    else {
+                        secondVal += 10;
+                    }
+                    if (val + secondVal == 11) {
+                        possibleEleven = true;
+                    }
+                }
+            }
+        }
+        if (!possibleEleven && (!hasJack || !hasKing || !hasQueen)) {
+            System.out.println("You lose!");
+        }
+    }
+
     public void mousePressed(MouseEvent e) {
 
         Point clicked = e.getPoint();
@@ -135,6 +195,8 @@ class DrawPanel extends JPanel implements MouseListener {
             if (button.contains(clicked)) {
                 hand = Card.buildHand();
                 highlightedHand = new ArrayList<Card>();
+                checkValues();
+                checkGameStatus();
             }
 
             for (int i = 0; i < hand.size(); i++) {
@@ -155,6 +217,7 @@ class DrawPanel extends JPanel implements MouseListener {
                 }
                 checkValues();
             }
+            checkGameStatus();
         }
 
         if (e.getButton() == 3) {
@@ -176,6 +239,7 @@ class DrawPanel extends JPanel implements MouseListener {
                 }
                 checkValues();
             }
+            checkGameStatus();
         }
 
 
