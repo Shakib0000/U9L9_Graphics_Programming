@@ -11,11 +11,13 @@ class DrawPanel extends JPanel implements MouseListener {
 
     private ArrayList<Card> hand;
     private ArrayList<Card> highlightedHand;
-    private Rectangle button;
+    private Rectangle startOverButton;
+    private Rectangle replaceCardsButton;
     private Deck cardDeck;
 
     public DrawPanel() {
-        button = new Rectangle(147, 300, 160, 26);
+        startOverButton = new Rectangle(87, 300, 160, 26);
+        replaceCardsButton = new Rectangle(300, 20, 160, 26);
         this.addMouseListener(this);
         hand = Card.buildHand();
         highlightedHand = new ArrayList<Card>();
@@ -24,7 +26,7 @@ class DrawPanel extends JPanel implements MouseListener {
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int x = 110;
+        int x = 50;
         int y = 10;
         for (int i = 0; i < hand.size(); i++) {
             Card c = hand.get(i);
@@ -35,14 +37,16 @@ class DrawPanel extends JPanel implements MouseListener {
             g.drawImage(c.getImage(), x, y, null);
             x = x + c.getImage().getWidth() + 20;
             if ((i + 1) % 3 == 0) {
-                x = 110;
+                x = 50;
                 y += 100;
             }
         }
         g.setFont(new Font("Courier New", Font.BOLD, 20));
-        g.drawString("GET NEW CARDS", 150, 320);
-        g.drawRect((int)button.getX(), (int)button.getY(), (int)button.getWidth(), (int)button.getHeight());
-        g.drawString("Cards left: " + hand.size(), 5, 450);
+        g.drawString("PLAY AGAIN", 105, 320);
+        g.drawRect((int)startOverButton.getX(), (int)startOverButton.getY(), (int)startOverButton.getWidth(), (int)startOverButton.getHeight());
+        g.drawString("REPLACE CARDS", 303, 40);
+        g.drawRect((int)replaceCardsButton.getX(), (int)replaceCardsButton.getY(), (int)replaceCardsButton.getWidth(), (int)replaceCardsButton.getHeight());
+        g.drawString("Cards left: " + cardDeck.getDeck().size(), 5, 450);
         checkGameStatus(g);
     }
 
@@ -70,12 +74,22 @@ class DrawPanel extends JPanel implements MouseListener {
                 if ((hand.get(i).getValue().equals(highlightedHand.get(0).getValue()) && hand.get(i).getSuit().equals(highlightedHand.get(0).getSuit())) || (hand.get(i).getValue().equals(highlightedHand.get(1).getValue()) && hand.get(i).getSuit().equals(highlightedHand.get(1).getSuit()))) {
                     if (valueFirst.equals("")) {
                         valueFirst = hand.get(i).getValue();
-                        hand.remove(i);
-                        i--;
+                        for (int j = 0; j < cardDeck.getDeck().size(); j++) {
+                            if (cardDeck.getDeck().get(j).getValue().equals(hand.get(i).getValue()) && cardDeck.getDeck().get(j).getSuit().equals(hand.get(i).getSuit())) {
+                                cardDeck.getDeck().remove(j);
+                                break;
+                            }
+                        }
+                        hand.set(i, cardDeck.getDeck().get((int) (Math.random() * cardDeck.getDeck().size())));
                     }
                     else if (!hand.get(i).getValue().equals(valueFirst)) {
-                        hand.remove(i);
-                        i--;
+                        for (int j = 0; j < cardDeck.getDeck().size(); j++) {
+                            if (cardDeck.getDeck().get(j).getValue().equals(hand.get(i).getValue()) && cardDeck.getDeck().get(j).getSuit().equals(hand.get(i).getSuit())) {
+                                cardDeck.getDeck().remove(j);
+                                break;
+                            }
+                        }
+                        hand.set(i, cardDeck.getDeck().get((int) (Math.random() * cardDeck.getDeck().size())));
                         highlightedHand = new ArrayList<Card>();
                         break;
                     }
@@ -105,18 +119,33 @@ class DrawPanel extends JPanel implements MouseListener {
                     if ((hand.get(i).getValue().equals(highlightedHand.get(0).getValue()) && hand.get(i).getSuit().equals(highlightedHand.get(0).getSuit())) || (hand.get(i).getValue().equals(highlightedHand.get(1).getValue()) && hand.get(i).getSuit().equals(highlightedHand.get(1).getSuit())) || (hand.get(i).getValue().equals(highlightedHand.get(2).getValue()) && hand.get(i).getSuit().equals(highlightedHand.get(2).getSuit()))) {
                         if (hand.get(i).getValue().equals("J") && !jackRemoved) {
                             jackRemoved = true;
-                            hand.remove(i);
-                            i--;
+                            for (int j = 0; j < cardDeck.getDeck().size(); j++) {
+                                if (cardDeck.getDeck().get(j).getValue().equals(hand.get(i).getValue()) && cardDeck.getDeck().get(j).getSuit().equals(hand.get(i).getSuit())) {
+                                    cardDeck.getDeck().remove(j);
+                                    break;
+                                }
+                            }
+                            hand.set(i, cardDeck.getDeck().get((int) (Math.random() * cardDeck.getDeck().size())));
                         }
                         else if (hand.get(i).getValue().equals("K") && !kingRemoved) {
                             kingRemoved = true;
-                            hand.remove(i);
-                            i--;
+                            for (int j = 0; j < cardDeck.getDeck().size(); j++) {
+                                if (cardDeck.getDeck().get(j).getValue().equals(hand.get(i).getValue()) && cardDeck.getDeck().get(j).getSuit().equals(hand.get(i).getSuit())) {
+                                    cardDeck.getDeck().remove(j);
+                                    break;
+                                }
+                            }
+                            hand.set(i, cardDeck.getDeck().get((int) (Math.random() * cardDeck.getDeck().size())));
                         }
                         else if (hand.get(i).getValue().equals("Q") && !queenRemoved) {
                             queenRemoved = true;
-                            hand.remove(i);
-                            i--;
+                            for (int j = 0; j < cardDeck.getDeck().size(); j++) {
+                                if (cardDeck.getDeck().get(j).getValue().equals(hand.get(i).getValue()) && cardDeck.getDeck().get(j).getSuit().equals(hand.get(i).getSuit())) {
+                                    cardDeck.getDeck().remove(j);
+                                    break;
+                                }
+                            }
+                            hand.set(i, cardDeck.getDeck().get((int) (Math.random() * cardDeck.getDeck().size())));
                         }
                         if (jackRemoved && kingRemoved && queenRemoved) {
                             highlightedHand = new ArrayList<Card>();
@@ -129,8 +158,7 @@ class DrawPanel extends JPanel implements MouseListener {
     }
 
     public void checkGameStatus(Graphics g) {
-        if (hand.size() == 0) {
-            System.out.println("You win!");
+        if (cardDeck.getDeck().size() == 0) {
             g.drawString("Congrats, you win!", 5, 400);
         }
         boolean possibleEleven = false;
@@ -186,7 +214,6 @@ class DrawPanel extends JPanel implements MouseListener {
             }
         }
         if (!possibleEleven && (!hasJack || !hasKing || !hasQueen)) {
-            System.out.println("You lose!");
             g.drawString("No available moves! GAME OVER!", 5, 400);
         }
     }
@@ -196,9 +223,12 @@ class DrawPanel extends JPanel implements MouseListener {
         Point clicked = e.getPoint();
 
         if (e.getButton() == 1) {
-            if (button.contains(clicked)) {
+            if (startOverButton.contains(clicked)) {
+                cardDeck = new Deck();
                 hand = Card.buildHand();
                 highlightedHand = new ArrayList<Card>();
+            }
+            else if (replaceCardsButton.contains(clicked)) {
                 checkValues();
             }
 
@@ -218,7 +248,6 @@ class DrawPanel extends JPanel implements MouseListener {
                         }
                     }
                 }
-                checkValues();
             }
         }
 
@@ -239,7 +268,6 @@ class DrawPanel extends JPanel implements MouseListener {
                         }
                     }
                 }
-                checkValues();
             }
         }
 
